@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Rider-Waite-Smith · Consulta Interativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0a0a1a;
+            --deep-purple: #1a0f2e;
+            --mystic-purple: #4a1c6b;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --stardust: #e8d5b7;
+            --cosmic-blue: #1e3a5f;
+            --shadow: rgba(0, 0, 0, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, var(--midnight) 0%, var(--deep-purple) 50%, var(--cosmic-blue) 100%);
+            color: var(--stardust);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(74, 28, 107, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(30, 58, 95, 0.3) 0%, transparent 50%),
+                radial-gradient(1px 1px at 20% 30%, white, transparent),
+                radial-gradient(1px 1px at 60% 70%, white, transparent),
+                radial-gradient(2px 2px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(1px 1px at 90% 60%, white, transparent);
+            background-size: 200% 200%, 200% 200%, 200px 200px, 300px 300px, 400px 400px, 250px 250px, 350px 350px;
+            opacity: 0.4;
+            z-index: -1;
+            animation: cosmic-drift 60s ease-in-out infinite;
+        }
+        
+        @keyframes cosmic-drift {
+            0%, 100% { background-position: 0% 0%, 100% 100%, 0 0, 0 0, 0 0, 0 0, 0 0; }
+            50% { background-position: 100% 100%, 0% 0%, 100px 100px, 150px 150px, 200px 200px, 125px 125px, 175px 175px; }
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.6),
+                         0 0 60px rgba(212, 175, 55, 0.3);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(212, 175, 55, 0.6), 0 0 60px rgba(212, 175, 55, 0.3); }
+            50% { text-shadow: 0 0 40px rgba(212, 175, 55, 0.8), 0 0 80px rgba(212, 175, 55, 0.5); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--silver);
+            font-style: italic;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            padding: 2rem 1rem;
+            margin: 0 auto;
+            max-width: 900px;
+        }
+        
+        button {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, var(--mystic-purple), var(--deep-purple));
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.3), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            border-radius: 50%;
+        }
+        
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        button:hover {
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        button.active {
+            background: linear-gradient(135deg, var(--gold), #b8941f);
+            color: var(--midnight);
+            border-color: var(--stardust);
+        }
+        
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .search-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        input[type="text"] {
+            font-family: 'Cormorant Garamond', serif;
+            background: rgba(26, 15, 46, 0.6);
+            border: 2px solid var(--mystic-purple);
+            color: var(--stardust);
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        input[type="text"]::placeholder {
+            color: var(--silver);
+            opacity: 0.6;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        
+        .filter-btn {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(26, 15, 46, 0.6);
+            border: 1px solid var(--mystic-purple);
+            color: var(--silver);
+        }
+        
+        .filter-btn.active {
+            background: var(--mystic-purple);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+        
+        #cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        .card-item {
+            background: linear-gradient(135deg, rgba(26, 15, 46, 0.8), rgba(74, 28, 107, 0.6));
+            border: 2px solid var(--mystic-purple);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--gold);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+        }
+        
+        .card-img-container {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: var(--midnight);
+            margin-bottom: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--mystic-purple);
+        }
+        
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .card-item:hover .card-img-container img {
+            transform: scale(1.05);
+        }
+        
+        .card-name {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--deep-purple), var(--midnight));
+            border: 3px solid var(--gold);
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+            color: var(--stardust);
+        }
+        
+        .modal-card-display {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-card-display {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .modal-card-img {
+            width: 100%;
+            border: 2px solid var(--gold);
+            background: var(--midnight);
+        }
+        
+        .modal-card-info h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .modal-card-info h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--silver);
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--mystic-purple);
+            padding-bottom: 0.5rem;
+        }
+        
+        .modal-card-info p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .keyword {
+            background: var(--mystic-purple);
+            color: var(--gold);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.9rem;
+            border: 1px solid var(--gold);
+            font-style: italic;
+        }
+        
+        #spread-area {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spread-selector {
+            margin-bottom: 2rem;
+        }
+        
+        .spread-selector select {
+            font-family: 'Cormorant Garamond', serif;
+            background: rgba(26, 15, 46, 0.8);
+            color: var(--stardust);
+            border: 2px solid var(--gold);
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        
+        #draw-btn {
+            margin: 2rem auto;
+            display: block;
+            font-size: 1.2rem;
+            padding: 1rem 3rem;
+        }
+        
+        #spread-result {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .spread-card {
+            text-align: center;
+            animation: revealCard 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        @keyframes revealCard {
+            from {
+                opacity: 0;
+                transform: rotateY(180deg);
+            }
+            to {
+                opacity: 1;
+                transform: rotateY(0deg);
+            }
+        }
+        
+        .spread-card-img {
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto 1rem;
+            border: 2px solid var(--gold);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .spread-card-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .spread-card-name {
+            color: var(--stardust);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .spread-card-meaning {
+            font-size: 0.95rem;
+            color: var(--silver);
+            line-height: 1.6;
+        }
+        
+        .inverted-label {
+            color: var(--mystic-purple);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--mystic-purple);
+            color: var(--silver);
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: var(--stardust);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⟡ TAROT ⟡</h1>
+        <p class="subtitle">Rider-Waite-Smith</p>
+    </header>
+    
+    <nav>
+        <button onclick="showView('gallery')" class="active" id="gallery-btn">Galeria de Cartas</button>
+        <button onclick="showView('spread')" id="spread-btn">Tiragens</button>
+    </nav>
+    
+    <main>
+        <div id="gallery-view">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Procurar carta..." oninput="filterCards()">
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterByType('all')">Todas</button>
+                <button class="filter-btn" onclick="filterByType('major')">Arcanos Maiores</button>
+                <button class="filter-btn" onclick="filterByType('wands')">Paus</button>
+                <button class="filter-btn" onclick="filterByType('cups')">Copas</button>
+                <button class="filter-btn" onclick="filterByType('swords')">Espadas</button>
+                <button class="filter-btn" onclick="filterByType('pentacles')">Ouros</button>
+            </div>
+            
+            <div id="cards-grid"></div>
+        </div>
+        
+        <div id="spread-area" style="display: none;">
+            <div class="spread-selector">
+                <select id="spread-type">
+                    <option value="single">Carta do Dia</option>
+                    <option value="three">Tiragem de 3 Cartas (Passado-Presente-Futuro)</option>
+                    <option value="celtic">Cruz Céltica (10 Cartas)</option>
+                </select>
+            </div>
+            <button id="draw-btn" onclick="drawSpread()">✦ Revelar Cartas ✦</button>
+            <div id="spread-result"></div>
+        </div>
+    </main>
+    
+    <div id="card-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <div class="modal-card-display">
+                <img id="modal-img" class="modal-card-img" src="" alt="">
+                <div class="modal-card-info">
+                    <h2 id="modal-name"></h2>
+                    <div id="modal-keywords" class="keywords"></div>
+                    <h3>Significado Normal</h3>
+                    <p id="modal-upright"></p>
+                    <h3>Significado Invertido</h3>
+                    <p id="modal-reversed"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Imagens do domínio público via <a href="https://commons.wikimedia.org" target="_blank">Wikimedia Commons</a></p>
+        <p>© 2025 · Desenvolvido com ✦ para exploração espiritual</p>
+    </footer>
+    
+    <script>
+        const tarotDeck = [
+            // ARCANOS MAIORES
+            {
+                name: "O Louco",
+                type: "major",
+                number: 0,
+                keywords: ["Novos começos", "Espontaneidade", "Fé", "Liberdade"],
+                upright: "O Louco representa novos começos, aventura e possibilidades ilimitadas. É um convite para dar um salto de fé e confiar no universo. Simboliza inocência, espontaneidade e viver o momento presente sem medo.",
+                reversed: "Imprudência, falta de direção, decisões precipitadas sem considerar as consequências. Pode indicar necessidade de maior responsabilidade ou atenção aos detalhes.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg"
+            },
+            {
+                name: "O Mago",
+                type: "major",
+                number: 1,
+                keywords: ["Manifestação", "Poder pessoal", "Habilidade", "Ação"],
+                upright: "O Mago simboliza o poder de manifestar os seus desejos através da vontade e ação. Possui todas as ferramentas necessárias para o sucesso. Representa criatividade, confiança e capacidade de transformar ideias em realidade.",
+                reversed: "Manipulação, uso indevido de talentos, falta de confiança. Pode indicar potencial não realizado ou recursos desperdiçados.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg"
+            },
+            {
+                name: "A Sacerdotisa",
+                type: "major",
+                number: 2,
+                keywords: ["Intuição", "Mistério", "Sabedoria interior", "Subconsciente"],
+                upright: "A Sacerdotisa representa intuição profunda, mistérios ocultos e sabedoria espiritual. Convida a olhar para dentro e confiar na sua voz interior. Simboliza conhecimento sagrado e conexão com o divino feminino.",
+                reversed: "Desconexão da intuição, segredos perturbadores, superficialidade. Pode indicar necessidade de maior introspecção.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg"
+            },
+            {
+                name: "A Imperatriz",
+                type: "major",
+                number: 3,
+                keywords: ["Abundância", "Fertilidade", "Natureza", "Criatividade"],
+                upright: "A Imperatriz simboliza abundância, fertilidade e criação. Representa a conexão com a natureza e o poder nutritivo do feminino. Traz prosperidade, beleza e crescimento em todas as áreas da vida.",
+                reversed: "Bloqueio criativo, dependência excessiva dos outros, negligência pessoal. Pode indicar desconexão da natureza ou de si próprio.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg"
+            },
+            {
+                name: "O Imperador",
+                type: "major",
+                number: 4,
+                keywords: ["Autoridade", "Estrutura", "Controlo", "Liderança"],
+                upright: "O Imperador representa autoridade, estrutura e liderança forte. Simboliza estabilidade, ordem e capacidade de estabelecer fundações sólidas. Traz disciplina, organização e poder de decisão.",
+                reversed: "Tirania, rigidez excessiva, falta de disciplina. Pode indicar problemas com autoridade ou dificuldade em estabelecer limites.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg"
+            },
+            {
+                name: "O Hierofante",
+                type: "major",
+                number: 5,
+                keywords: ["Tradição", "Educação", "Espiritualidade", "Conformidade"],
+                upright: "O Hierofante representa tradição, ensinamentos espirituais e conformidade com normas estabelecidas. Simboliza educação formal, orientação espiritual e conexão com instituições. Traz sabedoria através da tradição.",
+                reversed: "Rebelião contra convenções, rigidez de pensamento, dogmatismo. Pode indicar necessidade de questionar tradições ou buscar o próprio caminho espiritual.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg"
+            },
+            {
+                name: "Os Enamorados",
+                type: "major",
+                number: 6,
+                keywords: ["Amor", "Escolhas", "Harmonia", "Valores"],
+                upright: "Os Enamorados representam amor, união e escolhas significativas. Simbolizam harmonia em relacionamentos e alinhamento de valores. Trazem a necessidade de tomar decisões importantes do coração.",
+                reversed: "Desequilíbrio em relacionamentos, escolhas difíceis, valores conflitantes. Pode indicar necessidade de autoamor antes de se comprometer com outros.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/3a/TheLovers.jpg"
+            },
+            {
+                name: "O Carro",
+                type: "major",
+                number: 7,
+                keywords: ["Determinação", "Vitória", "Controlo", "Direção"],
+                upright: "O Carro simboliza determinação, força de vontade e vitória através do esforço. Representa controlo sobre forças opostas e movimento em direção aos objetivos. Traz sucesso através da determinação.",
+                reversed: "Falta de direção, perda de controlo, agressividade. Pode indicar obstáculos que impedem o progresso ou necessidade de redefinir objetivos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg"
+            },
+            {
+                name: "A Força",
+                type: "major",
+                number: 8,
+                keywords: ["Coragem", "Paciência", "Compaixão", "Controlo interior"],
+                upright: "A Força representa coragem interior, compaixão e controlo através da gentileza. Simboliza poder suave que domina através do amor, não da força bruta. Traz paciência e resiliência emocional.",
+                reversed: "Fraqueza interior, dúvida, falta de confiança. Pode indicar necessidade de desenvolver força emocional ou superar medos internos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg"
+            },
+            {
+                name: "O Eremita",
+                type: "major",
+                number: 9,
+                keywords: ["Introspecção", "Solidão", "Sabedoria", "Orientação interior"],
+                upright: "O Eremita simboliza busca interior, solidão contemplativa e sabedoria através da introspecção. Representa a necessidade de se retirar do mundo para encontrar respostas dentro de si. Traz iluminação espiritual.",
+                reversed: "Isolamento excessivo, solidão não saudável, recusa de orientação. Pode indicar necessidade de reconexão social ou medo de olhar para dentro.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/46/RWS_Tarot_09_Hermit.jpg"
+            },
+            {
+                name: "A Roda da Fortuna",
+                type: "major",
+                number: 10,
+                keywords: ["Ciclos", "Destino", "Mudança", "Oportunidade"],
+                upright: "A Roda da Fortuna representa ciclos da vida, mudança inevitável e forças do destino. Simboliza que tudo está em constante movimento. Traz oportunidades através de mudanças e reviravoltas do destino.",
+                reversed: "Resistência à mudança, má sorte temporária, falta de controlo. Pode indicar necessidade de aceitar os ciclos naturais da vida.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg"
+            },
+            {
+                name: "A Justiça",
+                type: "major",
+                number: 11,
+                keywords: ["Equilíbrio", "Verdade", "Responsabilidade", "Causa e efeito"],
+                upright: "A Justiça simboliza equilíbrio, verdade e responsabilidade pelas próprias ações. Representa a lei de causa e efeito e a necessidade de ser justo. Traz clareza, verdade e decisões equilibradas.",
+                reversed: "Injustiça, desonestidade, falta de responsabilidade. Pode indicar necessidade de assumir responsabilidade ou enfrentar consequências.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg"
+            },
+            {
+                name: "O Enforcado",
+                type: "major",
+                number: 12,
+                keywords: ["Suspensão", "Perspetiva", "Sacrifício", "Entrega"],
+                upright: "O Enforcado representa mudança de perspetiva, suspensão e sacrifício necessário. Simboliza a necessidade de ver as coisas de outro ângulo e render-se ao processo. Traz iluminação através da pausa.",
+                reversed: "Resistência desnecessária, mártir, recusa em mudar de perspetiva. Pode indicar necessidade de agir ao invés de esperar.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg"
+            },
+            {
+                name: "A Morte",
+                type: "major",
+                number: 13,
+                keywords: ["Transformação", "Fim", "Renovação", "Libertação"],
+                upright: "A Morte simboliza transformação profunda, fim de ciclos e renovação. Não representa morte física, mas sim mudanças inevitáveis e necessárias. Traz libertação do passado e renascimento.",
+                reversed: "Resistência à mudança, estagnação, medo de soltar. Pode indicar necessidade de aceitar finais para permitir novos começos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg"
+            },
+            {
+                name: "A Temperança",
+                type: "major",
+                number: 14,
+                keywords: ["Equilíbrio", "Moderação", "Paciência", "Harmonia"],
+                upright: "A Temperança representa equilíbrio, moderação e harmonia entre opostos. Simboliza a arte de misturar elementos diferentes para criar algo novo. Traz paciência, cura e alquimia espiritual.",
+                reversed: "Desequilíbrio, excessos, falta de moderação. Pode indicar necessidade de encontrar o meio-termo ou restaurar a harmonia.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg"
+            },
+            {
+                name: "O Diabo",
+                type: "major",
+                number: 15,
+                keywords: ["Vícios", "Materialismo", "Apego", "Sombra"],
+                upright: "O Diabo simboliza vícios, apegos materiais e aspectos sombrios da personalidade. Representa as cadeias que criamos para nós mesmos através de padrões destrutivos. Traz consciência sobre dependências e limitações autoinfligidas.",
+                reversed: "Libertação de vícios, quebra de cadeias, superação de medos. Pode indicar o início da recuperação ou despertar para padrões negativos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg"
+            },
+            {
+                name: "A Torre",
+                type: "major",
+                number: 16,
+                keywords: ["Mudança súbita", "Revelação", "Colapso", "Libertação"],
+                upright: "A Torre representa mudança súbita e dramática, destruição de estruturas falsas e revelações chocantes. Simboliza o colapso necessário de ilusões. Traz libertação através da destruição do que não serve mais.",
+                reversed: "Resistência à mudança inevitável, colapso interno, medo da transformação. Pode indicar necessidade de aceitar mudanças ou lidar com crises.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg"
+            },
+            {
+                name: "A Estrela",
+                type: "major",
+                number: 17,
+                keywords: ["Esperança", "Inspiração", "Renovação", "Serenidade"],
+                upright: "A Estrela simboliza esperança, renovação espiritual e inspiração divina. Representa cura após tempos difíceis e conexão com propósito superior. Traz paz, fé e orientação celestial.",
+                reversed: "Falta de fé, desesperança, desconexão espiritual. Pode indicar necessidade de renovar a esperança ou reconectar-se com sonhos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg"
+            },
+            {
+                name: "A Lua",
+                type: "major",
+                number: 18,
+                keywords: ["Ilusão", "Intuição", "Sonhos", "Subconsciente"],
+                upright: "A Lua representa ilusões, medos do subconsciente e o reino dos sonhos. Simboliza confusão, intuição e o que está oculto. Traz necessidade de navegar pela incerteza e confiar na intuição.",
+                reversed: "Clareza após confusão, revelação de enganos, superação de medos. Pode indicar libertação de ilusões ou confronto com ansiedades.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg"
+            },
+            {
+                name: "O Sol",
+                type: "major",
+                number: 19,
+                keywords: ["Alegria", "Sucesso", "Vitalidade", "Clareza"],
+                upright: "O Sol simboliza alegria, sucesso e vitalidade radiante. Representa clareza, otimismo e conquistas celebradas. Traz energia positiva, confiança e iluminação em todas as áreas da vida.",
+                reversed: "Otimismo excessivo, falta de clareza, atrasos no sucesso. Pode indicar necessidade de encontrar a luz interior ou superar pessimismo.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg"
+            },
+            {
+                name: "O Julgamento",
+                type: "major",
+                number: 20,
+                keywords: ["Renascimento", "Julgamento", "Absolvição", "Chamado"],
+                upright: "O Julgamento representa renascimento espiritual, avaliação da vida e chamado superior. Simboliza despertar para um propósito maior e segunda chance. Traz absolvição, renovação e transformação profunda.",
+                reversed: "Autocrítica excessiva, incapacidade de perdoar, medo do julgamento. Pode indicar necessidade de autoaceitação ou libertar-se de culpa.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg"
+            },
+            {
+                name: "O Mundo",
+                type: "major",
+                number: 21,
+                keywords: ["Conclusão", "Realização", "Completude", "Sucesso"],
+                upright: "O Mundo simboliza conclusão, realização e completude de um ciclo importante. Representa sucesso alcançado, integração e celebração de conquistas. Traz sensação de plenitude e preparação para novos ciclos.",
+                reversed: "Falta de conclusão, objetivos não alcançados, resistência ao fechamento. Pode indicar necessidade de finalizar projetos antes de começar novos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg"
+            },
+            
+            // PAUS (WANDS)
+            {
+                name: "Ás de Paus",
+                type: "wands",
+                keywords: ["Inspiração", "Novos projetos", "Criatividade", "Potencial"],
+                upright: "O Ás de Paus representa uma centelha de inspiração divina, novos começos criativos e potencial ilimitado. É o início de uma jornada apaixonante, repleta de entusiasmo e energia vital. Simboliza oportunidades emocionantes que alinham com o seu propósito.",
+                reversed: "Falta de direção, ideias não desenvolvidas, bloqueio criativo. Pode indicar necessidade de reavivar a paixão ou encontrar inspiração.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg"
+            },
+            {
+                name: "Dois de Paus",
+                type: "wands",
+                keywords: ["Planeamento", "Decisões futuras", "Progresso", "Descoberta"],
+                upright: "O Dois de Paus representa planeamento cuidadoso e decisões sobre o futuro. Simboliza estar numa encruzilhada, avaliando opções e preparando-se para expandir horizontes. Traz visão de longo prazo e coragem para explorar o desconhecido.",
+                reversed: "Medo de sair da zona de conforto, falta de planeamento, indecisão. Pode indicar necessidade de tomar decisões ou enfrentar limitações autoinfligidas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg"
+            },
+            {
+                name: "Três de Paus",
+                type: "wands",
+                keywords: ["Expansão", "Previsão", "Oportunidades", "Liderança"],
+                upright: "O Três de Paus simboliza expansão, visão de futuro e oportunidades em desenvolvimento. Representa os frutos do planeamento inicial e a antecipação de sucesso. Traz confiança no progresso e capacidade de ver além do horizonte imediato.",
+                reversed: "Atrasos na expansão, falta de previsão, oportunidades perdidas. Pode indicar necessidade de paciência ou reavaliação de planos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg"
+            },
+            {
+                name: "Quatro de Paus",
+                type: "wands",
+                keywords: ["Celebração", "Harmonia", "Estabilidade", "Alegria"],
+                upright: "O Quatro de Paus representa celebração, harmonia e marcos alcançados. Simboliza momentos de alegria, reuniões felizes e estabilidade conquistada. Traz sensação de pertença, segurança e motivos para comemorar.",
+                reversed: "Falta de harmonia em casa, celebrações adiadas, instabilidade. Pode indicar necessidade de criar fundações mais sólidas ou resolver conflitos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg"
+            },
+            {
+                name: "Cinco de Paus",
+                type: "wands",
+                keywords: ["Conflito", "Competição", "Tensão", "Desafios"],
+                upright: "O Cinco de Paus simboliza conflito, competição e tensão entre diferentes perspetivas. Representa desafios que testam a determinação e capacidade de defender posições. Traz a necessidade de encontrar terreno comum em meio ao caos.",
+                reversed: "Evitar conflitos necessários, conflito interno, resolução de disputas. Pode indicar fim de tensões ou necessidade de confrontar problemas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Wands05.jpg"
+            },
+            {
+                name: "Seis de Paus",
+                type: "wands",
+                keywords: ["Vitória", "Reconhecimento", "Sucesso", "Liderança"],
+                upright: "O Seis de Paus representa vitória, reconhecimento público e sucesso merecido. Simboliza conquistas celebradas e liderança reconhecida. Traz momento de glória, confiança elevada e validação dos esforços.",
+                reversed: "Falta de reconhecimento, vitória vazia, ego inflado. Pode indicar necessidade de humildade ou reavaliação do que constitui sucesso verdadeiro.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Wands06.jpg"
+            },
+            {
+                name: "Sete de Paus",
+                type: "wands",
+                keywords: ["Defesa", "Perseverança", "Coragem", "Desafios"],
+                upright: "O Sete de Paus simboliza defesa de posição, perseverança face à oposição e coragem para manter-se firme. Representa estar em vantagem mas precisando defender o território. Traz determinação para superar desafios múltiplos.",
+                reversed: "Sentir-se sobrecarregado, desistir facilmente, falta de convicção. Pode indicar necessidade de escolher batalhas com sabedoria ou fortalecer a determinação.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Wands07.jpg"
+            },
+            {
+                name: "Oito de Paus",
+                type: "wands",
+                keywords: ["Movimento rápido", "Ação", "Progresso", "Comunicação"],
+                upright: "O Oito de Paus representa movimento rápido, ação decisiva e progresso acelerado. Simboliza eventos que se desenrolam rapidamente e comunicação eficiente. Traz momento dinâmico onde tudo acontece ao mesmo tempo.",
+                reversed: "Atrasos, paciência necessária, falta de direção. Pode indicar necessidade de abrandar ou lidar com comunicações confusas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands08.jpg"
+            },
+            {
+                name: "Nove de Paus",
+                type: "wands",
+                keywords: ["Resiliência", "Persistência", "Defesa", "Força interior"],
+                upright: "O Nove de Paus simboliza resiliência, persistência face a adversidades e força interior. Representa estar quase a alcançar a meta mas precisando de último esforço. Traz capacidade de continuar apesar de feridas e cansaço.",
+                reversed: "Exaustão, paranoia, desistir antes da vitória. Pode indicar necessidade de descanso ou deixar ir batalhas que não valem a pena.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Tarot_Nine_of_Wands.jpg"
+            },
+            {
+                name: "Dez de Paus",
+                type: "wands",
+                keywords: ["Sobrecarga", "Responsabilidade", "Fardo", "Stress"],
+                upright: "O Dez de Paus representa sobrecarga, excesso de responsabilidades e fardo pesado. Simboliza assumir mais do que se pode carregar e stress resultante. Traz necessidade de delegar, estabelecer limites ou reavaliar prioridades.",
+                reversed: "Libertar fardos, delegar responsabilidades, aprender a dizer não. Pode indicar alívio de pressão ou reconhecimento de limites.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Wands10.jpg"
+            },
+            {
+                name: "Valete de Paus",
+                type: "wands",
+                keywords: ["Entusiasmo", "Exploração", "Mensageiro", "Aventura"],
+                upright: "O Valete de Paus simboliza entusiasmo juvenil, espírito exploratório e mensagens inspiradoras. Representa novidades emocionantes e vontade de aventura. Traz energia fresca, curiosidade e paixão por descobrir.",
+                reversed: "Imaturidade, falta de direção, mensagens atrasadas. Pode indicar necessidade de foco ou desenvolver planos mais sólidos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Wands11.jpg"
+            },
+            {
+                name: "Cavaleiro de Paus",
+                type: "wands",
+                keywords: ["Ação", "Aventura", "Impulso", "Mudança"],
+                upright: "O Cavaleiro de Paus representa ação impetuosa, espírito aventureiro e mudança rápida. Simboliza movimento apaixonado em direção a objetivos. Traz energia dinâmica, coragem para agir e vontade de explorar novos territórios.",
+                reversed: "Impulsividade excessiva, falta de direção, impaciência. Pode indicar necessidade de moderação ou planeamento antes de agir.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg"
+            },
+            {
+                name: "Rainha de Paus",
+                type: "wands",
+                keywords: ["Confiança", "Carisma", "Independência", "Determinação"],
+                upright: "A Rainha de Paus simboliza confiança radiante, carisma natural e independência forte. Representa liderança apaixonada e capacidade de inspirar outros. Traz energia magnética, autenticidade e determinação inabalável.",
+                reversed: "Insegurança, ciúmes, comportamento controlador. Pode indicar necessidade de trabalhar autoestima ou equilibrar poder pessoal.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg"
+            },
+            {
+                name: "Rei de Paus",
+                type: "wands",
+                keywords: ["Visão", "Empreendedorismo", "Liderança", "Carisma"],
+                upright: "O Rei de Paus representa visão empreendedora, liderança natural e influência carismática. Simboliza capacidade de transformar visões em realidade através de ação decisiva. Traz confiança, honra e habilidade para inspirar e liderar.",
+                reversed: "Tirania, arrogância, falta de visão. Pode indicar necessidade de humildade ou reavaliação de métodos de liderança.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Wands14.jpg"
+            },
+            
+            // COPAS (CUPS)
+            {
+                name: "Ás de Copas",
+                type: "cups",
+                keywords: ["Amor novo", "Emoções", "Intuição", "Criatividade"],
+                upright: "O Ás de Copas representa novos começos emocionais, amor incondicional e transbordamento de sentimentos. Simboliza abertura do coração e conexão espiritual profunda. Traz ofertas divinas de amor, criatividade e intuição aguçada.",
+                reversed: "Bloqueio emocional, amor não correspondido, repressão de sentimentos. Pode indicar necessidade de cura emocional ou abertura do coração.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg"
+            },
+            {
+                name: "Dois de Copas",
+                type: "cups",
+                keywords: ["Parceria", "Conexão", "Harmonia", "União"],
+                upright: "O Dois de Copas simboliza parceria equilibrada, conexão profunda e harmonia em relacionamentos. Representa união baseada em respeito mútuo e atração genuína. Traz amor recíproco, compreensão e cooperação harmoniosa.",
+                reversed: "Desequilíbrio em relacionamentos, discórdia, separação. Pode indicar necessidade de trabalhar comunicação ou reconhecer diferenças irreconciliáveis.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f8/Cups02.jpg"
+            },
+            {
+                name: "Três de Copas",
+                type: "cups",
+                keywords: ["Celebração", "Amizade", "Comunidade", "Alegria"],
+                upright: "O Três de Copas representa celebração com amigos, alegria partilhada e comunidade acolhedora. Simboliza momentos felizes, reuniões festivas e apoio mútuo. Traz energia de gratidão, abundância emocional e conexões significativas.",
+                reversed: "Fofoca, exclusão social, excessos. Pode indicar necessidade de avaliar amizades ou moderar comportamentos de grupo.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Cups03.jpg"
+            },
+            {
+                name: "Quatro de Copas",
+                type: "cups",
+                keywords: ["Contemplação", "Reavaliação", "Apatia", "Meditação"],
+                upright: "O Quatro de Copas simboliza contemplação profunda, reavaliação de ofertas e possível apatia. Representa necessidade de olhar para dentro antes de aceitar novas oportunidades. Traz momento de pausa para reflexão e discernimento.",
+                reversed: "Despertar de apatia, aceitação de novas oportunidades, renovação. Pode indicar fim de período introspectivo ou nova perspetiva.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Cups04.jpg"
+            },
+            {
+                name: "Cinco de Copas",
+                type: "cups",
+                keywords: ["Perda", "Luto", "Desapontamento", "Aceitação"],
+                upright: "O Cinco de Copas representa perda, luto e desapontamento profundo. Simboliza foco no que foi perdido em vez do que permanece. Traz necessidade de processar tristeza mas também reconhecer bênçãos que ainda existem.",
+                reversed: "Aceitação de perda, perdão, movimento adiante. Pode indicar cura emocional ou capacidade de ver o lado positivo.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg"
+            },
+            {
+                name: "Seis de Copas",
+                type: "cups",
+                keywords: ["Nostalgia", "Memórias", "Inocência", "Passado"],
+                upright: "O Seis de Copas simboliza nostalgia, memórias felizes e inocência da infância. Representa reconexão com o passado ou retorno de pessoas significativas. Traz conforto de memórias queridas e possível reconciliação.",
+                reversed: "Viver no passado, idealização excessiva, incapacidade de soltar. Pode indicar necessidade de focar no presente ou deixar ir o que passou.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/17/Cups06.jpg"
+            },
+            {
+                name: "Sete de Copas",
+                type: "cups",
+                keywords: ["Escolhas", "Ilusão", "Fantasia", "Opções"],
+                upright: "O Sete de Copas representa múltiplas escolhas, ilusões sedutoras e fantasias tentadoras. Simboliza confusão entre realidade e desejo, necessitando de discernimento. Traz necessidade de clareza antes de decidir entre opções aparentemente atraentes.",
+                reversed: "Clareza após confusão, realismo, escolhas conscientes. Pode indicar desilusão necessária ou capacidade de ver através de ilusões.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cups07.jpg"
+            },
+            {
+                name: "Oito de Copas",
+                type: "cups",
+                keywords: ["Abandono", "Busca", "Mudança", "Desapego"],
+                upright: "O Oito de Copas simboliza abandono do que não satisfaz mais, busca por significado maior e mudança necessária. Representa coragem de deixar segurança em favor de crescimento espiritual. Traz jornada em direção a algo mais autêntico.",
+                reversed: "Medo de mudança, apego ao conhecido, evitar necessário. Pode indicar resistência a deixar ir ou procrastinação em decisões importantes.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/6/60/Cups08.jpg"
+            },
+            {
+                name: "Nove de Copas",
+                type: "cups",
+                keywords: ["Satisfação", "Desejos realizados", "Contentamento", "Abundância"],
+                upright: "O Nove de Copas representa satisfação emocional, desejos realizados e contentamento profundo. Simboliza a carta dos desejos onde sonhos se tornam realidade. Traz sensação de plenitude, gratidão e abundância emocional e material.",
+                reversed: "Ganância, insatisfação apesar de ter tudo, desejos superficiais. Pode indicar necessidade de gratidão ou reavaliação do que realmente importa.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg"
+            },
+            {
+                name: "Dez de Copas",
+                type: "cups",
+                keywords: ["Harmonia familiar", "Felicidade", "União", "Realização"],
+                upright: "O Dez de Copas simboliza harmonia familiar perfeita, felicidade duradoura e realização emocional completa. Representa união familiar, amor incondicional e alegria partilhada. Traz bênçãos divinas, paz doméstica e satisfação profunda.",
+                reversed: "Desarmonia familiar, valores diferentes, idealização de família. Pode indicar necessidade de trabalhar relações ou aceitar imperfeições.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg"
+            },
+            {
+                name: "Valete de Copas",
+                type: "cups",
+                keywords: ["Mensagem emocional", "Criatividade", "Intuição", "Sensibilidade"],
+                upright: "O Valete de Copas representa mensagens emocionais, criatividade emergente e sensibilidade aguçada. Simboliza novidades relacionadas a amor ou projetos criativos. Traz intuição jovem, abertura emocional e convites românticos ou artísticos.",
+                reversed: "Imaturidade emocional, mensagens confusas, bloqueio criativo. Pode indicar necessidade de desenvolver inteligência emocional ou expressar sentimentos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Cups11.jpg"
+            },
+            {
+                name: "Cavaleiro de Copas",
+                type: "cups",
+                keywords: ["Romance", "Charme", "Proposta", "Idealismo"],
+                upright: "O Cavaleiro de Copas simboliza romance, charme e propostas emocionantes. Representa chegada de convites românticos ou oportunidades criativas. Traz energia de sonhador, idealismo e busca apaixonada por beleza e amor.",
+                reversed: "Promessas vazias, romantismo excessivo, irrealismo. Pode indicar necessidade de aterrar sonhos em realidade ou cautela com seduções.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Cups12.jpg"
+            },
+            {
+                name: "Rainha de Copas",
+                type: "cups",
+                keywords: ["Compaixão", "Intuição", "Empatia", "Cuidado"],
+                upright: "A Rainha de Copas representa compaixão profunda, intuição aguçada e capacidade de nutrir emocionalmente. Simboliza sabedoria emocional e conexão psíquica forte. Traz amor maternal, empatia genuína e compreensão dos sentimentos alheios.",
+                reversed: "Dependência emocional, manipulação sentimental, instabilidade. Pode indicar necessidade de estabelecer limites emocionais ou cuidar de si próprio.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/6/62/Cups13.jpg"
+            },
+            {
+                name: "Rei de Copas",
+                type: "cups",
+                keywords: ["Controlo emocional", "Diplomacia", "Equilíbrio", "Maturidade"],
+                upright: "O Rei de Copas simboliza controlo emocional, diplomacia e equilíbrio entre sentimento e razão. Representa maturidade emocional e capacidade de liderar com compaixão. Traz sabedoria do coração, aconselhamento equilibrado e estabilidade emocional.",
+                reversed: "Supressão emocional, manipulação, frieza. Pode indicar necessidade de expressar vulnerabilidade ou reconhecer emoções reprimidas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg"
+            },
+            
+            // ESPADAS (SWORDS)
+            {
+                name: "Ás de Espadas",
+                type: "swords",
+                keywords: ["Clareza mental", "Verdade", "Novos pensamentos", "Justiça"],
+                upright: "O Ás de Espadas representa clareza mental súbita, verdade revelada e novos insights poderosos. Simboliza momento de despertar intelectual e corte através de ilusões. Traz pensamento claro, comunicação honesta e vitória através da verdade.",
+                reversed: "Confusão mental, comunicação hostil, verdades dolorosas. Pode indicar necessidade de clareza ou cautela com palavras afiadas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg"
+            },
+            {
+                name: "Dois de Espadas",
+                type: "swords",
+                keywords: ["Indecisão", "Impasse", "Escolha difícil", "Negação"],
+                upright: "O Dois de Espadas simboliza indecisão, impasse e dificuldade em escolher entre opções. Representa bloqueio mental ou recusa em ver a verdade. Traz necessidade de remover vendas dos olhos e enfrentar decisões pendentes.",
+                reversed: "Fim de indecisão, escolha feita, verdade revelada. Pode indicar avanço após período de hesitação ou capacidade de ver claramente.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Swords02.jpg"
+            },
+            {
+                name: "Três de Espadas",
+                type: "swords",
+                keywords: ["Dor emocional", "Traição", "Tristeza", "Libertação"],
+                upright: "O Três de Espadas representa dor emocional profunda, traição e tristeza cortante. Simboliza sofrimento necessário que eventualmente leva à cura. Traz momento de luto mas também libertação emocional através do reconhecimento da dor.",
+                reversed: "Cura após dor, perdão, recuperação. Pode indicar início da superação ou libertação de mágoa antiga.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/02/Swords03.jpg"
+            },
+            {
+                name: "Quatro de Espadas",
+                type: "swords",
+                keywords: ["Descanso", "Recuperação", "Contemplação", "Retiro"],
+                upright: "O Quatro de Espadas simboliza necessidade de descanso, recuperação após esforço e contemplação silenciosa. Representa pausa estratégica para restaurar energias mentais. Traz período de retiro, meditação e preparação para desafios futuros.",
+                reversed: "Exaustão contínua, recusa em descansar, retorno à ação. Pode indicar fim de período de recuperação ou necessidade urgente de pausa.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/b/bf/Swords04.jpg"
+            },
+            {
+                name: "Cinco de Espadas",
+                type: "swords",
+                keywords: ["Conflito", "Derrota", "Traição", "Ego"],
+                upright: "O Cinco de Espadas representa conflito destrutivo, vitória vazia e possível traição. Simboliza ganhar às custas de outros ou enfrentar derrota humilhante. Traz necessidade de avaliar se a vitória vale o preço pago em relacionamentos.",
+                reversed: "Fim de conflito, busca de reconciliação, humildade. Pode indicar aprendizado através de derrota ou desejo de fazer as pazes.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg"
+            },
+            {
+                name: "Seis de Espadas",
+                type: "swords",
+                keywords: ["Transição", "Mudança", "Viagem", "Cura"],
+                upright: "O Seis de Espadas simboliza transição necessária, afastamento de problemas e viagem em direção a águas mais calmas. Representa mudança gradual mas positiva. Traz esperança de tempos melhores, cura através da distância e progresso steady.",
+                reversed: "Resistência à mudança necessária, bagagem emocional, dificuldade em seguir em frente. Pode indicar atraso em transição importante.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/2/29/Swords06.jpg"
+            },
+            {
+                name: "Sete de Espadas",
+                type: "swords",
+                keywords: ["Desonestidade", "Estratégia", "Furtividade", "Evasão"],
+                upright: "O Sete de Espadas representa desonestidade, estratégia furtiva ou evasão de responsabilidades. Simboliza agir nas sombras ou manter segredos. Traz aviso sobre enganos possíveis ou necessidade de ser astuto em situações difíceis.",
+                reversed: "Verdade revelada, confessar enganos, fim de desonestidade. Pode indicar consciência culpada ou decisão de ser honesto.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg"
+            },
+            {
+                name: "Oito de Espadas",
+                type: "swords",
+                keywords: ["Prisão mental", "Limitações", "Vítima", "Libertação"],
+                upright: "O Oito de Espadas simboliza prisão mental autoimposta, sentimento de impotência e limitações percebidas. Representa estar cego às próprias opções. Traz reconhecimento de que as correntes são maioritariamente mentais e podem ser removidas.",
+                reversed: "Libertação de limitações, nova perspetiva, empoderamento. Pode indicar remoção de vendas e reconhecimento de poder pessoal.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Swords08.jpg"
+            },
+            {
+                name: "Nove de Espadas",
+                type: "swords",
+                keywords: ["Ansiedade", "Pesadelos", "Preocupação", "Culpa"],
+                upright: "O Nove de Espadas representa ansiedade extrema, pesadelos e preocupações que impedem o sono. Simboliza tormento mental e culpa opressiva. Traz reconhecimento de que medos são muitas vezes piores que realidade e necessidade de buscar apoio.",
+                reversed: "Alívio de ansiedade, fim de pesadelos, esperança renovada. Pode indicar superação de medos ou busca de ajuda profissional.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Swords09.jpg"
+            },
+            {
+                name: "Dez de Espadas",
+                type: "swords",
+                keywords: ["Fim doloroso", "Traição", "Colapso", "Renovação"],
+                upright: "O Dez de Espadas simboliza fim doloroso mas definitivo, possível traição e colapso de situações. Representa o ponto mais baixo antes do renascimento. Traz fim dramático que, embora doloroso, permite começar de novo sem ilusões.",
+                reversed: "Recuperação após ruína, resiliência, recusa em desistir. Pode indicar que o pior já passou ou capacidade de se levantar novamente.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg"
+            },
+            {
+                name: "Valete de Espadas",
+                type: "swords",
+                keywords: ["Vigilância", "Curiosidade", "Comunicação", "Alerta"],
+                upright: "O Valete de Espadas representa vigilância mental, curiosidade aguçada e comunicação direta. Simboliza mensagens importantes ou necessidade de estar alerta. Traz energia de detetive, pensamento rápido e vontade de descobrir verdades ocultas.",
+                reversed: "Fofoca, mensagens maliciosas, paranoia. Pode indicar uso indevido de informação ou cautela com comunicações.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg"
+            },
+            {
+                name: "Cavaleiro de Espadas",
+                type: "swords",
+                keywords: ["Ação rápida", "Ambição", "Determinação", "Comunicação direta"],
+                upright: "O Cavaleiro de Espadas simboliza ação rápida e decisiva, ambição intelectual e comunicação direta e cortante. Representa movimento veloz em direção a objetivos com determinação férrea. Traz energia de guerreiro mental, coragem intelectual e vontade inabalável.",
+                reversed: "Impulsividade destrutiva, agressividade verbal, falta de planeamento. Pode indicar necessidade de moderação ou cautela com ações precipitadas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg"
+            },
+            {
+                name: "Rainha de Espadas",
+                type: "swords",
+                keywords: ["Clareza", "Independência", "Honestidade", "Discernimento"],
+                upright: "A Rainha de Espadas representa clareza mental superior, independência forte e honestidade sem rodeios. Simboliza sabedoria adquirida através de experiências difíceis. Traz julgamento justo, comunicação direta e capacidade de ver através de ilusões com compaixão.",
+                reversed: "Frieza emocional, crueldade verbal, amargura. Pode indicar necessidade de equilibrar lógica com compaixão ou cura de feridas antigas.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg"
+            },
+            {
+                name: "Rei de Espadas",
+                type: "swords",
+                keywords: ["Autoridade intelectual", "Verdade", "Ética", "Julgamento"],
+                upright: "O Rei de Espadas simboliza autoridade intelectual, busca pela verdade e julgamento ético. Representa liderança através da lógica, conhecimento e integridade. Traz capacidade de tomar decisões difíceis baseadas em princípios, comunicação clara e sabedoria estratégica.",
+                reversed: "Abuso de poder intelectual, manipulação, frieza. Pode indicar tirania mental ou necessidade de equilibrar razão com emoção.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Swords14.jpg"
+            },
+            
+            // OUROS (PENTACLES)
+            {
+                name: "Ás de Ouros",
+                type: "pentacles",
+                keywords: ["Nova oportunidade", "Prosperidade", "Manifestação", "Abundância"],
+                upright: "O Ás de Ouros representa nova oportunidade material, início de prosperidade e potencial de manifestação física. Simboliza ofertas do universo relacionadas a dinheiro, trabalho ou saúde. Traz sementes de abundância futura e oportunidades tangíveis.",
+                reversed: "Oportunidade perdida, ganância, insegurança financeira. Pode indicar necessidade de reavaliar valores materiais ou cautela com investimentos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg"
+            },
+            {
+                name: "Dois de Ouros",
+                type: "pentacles",
+                keywords: ["Equilíbrio", "Adaptabilidade", "Prioridades", "Malabarismo"],
+                upright: "O Dois de Ouros simboliza necessidade de equilíbrio, adaptabilidade a mudanças e malabarismo de responsabilidades. Representa gestão de múltiplas prioridades com flexibilidade. Traz capacidade de se adaptar enquanto mantém tudo em movimento.",
+                reversed: "Desequilíbrio, sobrecarga, desorganização. Pode indicar necessidade de simplificar ou estabelecer prioridades mais claras.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pents02.jpg"
+            },
+            {
+                name: "Três de Ouros",
+                type: "pentacles",
+                keywords: ["Trabalho em equipa", "Colaboração", "Habilidade", "Aprendizagem"],
+                upright: "O Três de Ouros representa trabalho em equipa eficaz, colaboração produtiva e reconhecimento de habilidades. Simboliza construção conjunta de algo significativo. Traz aprendizagem através de mestres, cooperação harmoniosa e valorização do talento.",
+                reversed: "Falta de trabalho em equipa, desorganização, ego. Pode indicar conflitos no grupo ou falta de reconhecimento de esforços.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg"
+            },
+            {
+                name: "Quatro de Ouros",
+                type: "pentacles",
+                keywords: ["Segurança", "Controlo", "Poupança", "Apego"],
+                upright: "O Quatro de Ouros simboliza busca de segurança financeira, controlo sobre recursos e poupança cuidadosa. Representa estabilidade através de gestão conservadora. Traz consciência sobre apego material e necessidade de equilíbrio entre segurança e generosidade.",
+                reversed: "Ganância, avareza, medo de perda. Pode indicar necessidade de soltar controlo excessivo ou maior generosidade.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg"
+            },
+            {
+                name: "Cinco de Ouros",
+                type: "pentacles",
+                keywords: ["Dificuldade", "Perda", "Isolamento", "Ajuda"],
+                upright: "O Cinco de Ouros representa dificuldade financeira, perda material ou isolamento. Simboliza momentos de provação onde ajuda está disponível mas pode ser difícil de aceitar. Traz reconhecimento de que apoio existe mesmo nas horas mais escuras.",
+                reversed: "Recuperação de dificuldades, aceitação de ajuda, melhoria. Pode indicar fim de período difícil ou disposição para receber apoio.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/9/9a/Pents05.jpg"
+            },
+            {
+                name: "Seis de Ouros",
+                type: "pentacles",
+                keywords: ["Generosidade", "Caridade", "Partilha", "Equilíbrio"],
+                upright: "O Seis de Ouros simboliza generosidade, atos de caridade e partilha equilibrada de recursos. Representa dar e receber em harmonia. Traz reconhecimento de que prosperidade é para ser partilhada e que às vezes somos doadores, outras recetores.",
+                reversed: "Desequilíbrio em dar/receber, dívidas, caridade com condições. Pode indicar necessidade de estabelecer limites ou aceitar ajuda com humildade.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pents06.jpg"
+            },
+            {
+                name: "Sete de Ouros",
+                type: "pentacles",
+                keywords: ["Avaliação", "Paciência", "Investimento", "Planeamento"],
+                upright: "O Sete de Ouros representa avaliação de progresso, paciência com resultados e reflexão sobre investimentos. Simboliza pausa para avaliar se esforços estão a dar frutos desejados. Traz necessidade de visão de longo prazo e possível reavaliação de estratégias.",
+                reversed: "Impaciência, falta de visão, investimento mal direcionado. Pode indicar necessidade de perseverança ou mudança de abordagem.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg"
+            },
+            {
+                name: "Oito de Ouros",
+                type: "pentacles",
+                keywords: ["Dedicação", "Habilidade", "Trabalho duro", "Aperfeiçoamento"],
+                upright: "O Oito de Ouros simboliza dedicação ao ofício, desenvolvimento de habilidades e trabalho duro meticuloso. Representa aprendizagem contínua e aperfeiçoamento através da prática. Traz mestria através do esforço consistente e satisfação no trabalho bem feito.",
+                reversed: "Falta de foco, trabalho descuidado, falta de ambição. Pode indicar necessidade de maior dedicação ou reavaliação de carreira.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg"
+            },
+            {
+                name: "Nove de Ouros",
+                type: "pentacles",
+                keywords: ["Independência", "Luxo", "Autossuficiência", "Realização"],
+                upright: "O Nove de Ouros representa independência financeira, luxo merecido e autossuficiência conquistada. Simboliza colheita de frutos do trabalho árduo e capacidade de desfrutar sozinho. Traz refinamento, conforto material e satisfação com conquistas pessoais.",
+                reversed: "Dependência financeira, superficialidade, isolamento. Pode indicar dificuldade em desfrutar de conquistas ou foco excessivo em posses.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg"
+            },
+            {
+                name: "Dez de Ouros",
+                type: "pentacles",
+                keywords: ["Legado", "Riqueza familiar", "Tradição", "Segurança"],
+                upright: "O Dez de Ouros simboliza legado familiar, riqueza duradoura e tradições estabelecidas. Representa segurança material para gerações futuras e valores familiares sólidos. Traz prosperidade permanente, herança e estabilidade através de fundações fortes.",
+                reversed: "Perda de herança, conflitos familiares sobre dinheiro, valores questionados. Pode indicar necessidade de redefinir sucesso além do material.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg"
+            },
+            {
+                name: "Valete de Ouros",
+                type: "pentacles",
+                keywords: ["Oportunidade", "Estudos", "Ambição", "Mensagem prática"],
+                upright: "O Valete de Ouros representa novas oportunidades práticas, início de estudos ou projetos e ambição nascente. Simboliza mensagens relacionadas a dinheiro ou trabalho. Traz energia de estudante dedicado, curiosidade sobre o mundo material e vontade de aprender ofícios.",
+                reversed: "Falta de progresso, procrastinação, oportunidades desperdiçadas. Pode indicar necessidade de foco ou desenvolvimento de planos mais concretos.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Pents11.jpg"
+            },
+            {
+                name: "Cavaleiro de Ouros",
+                type: "pentacles",
+                keywords: ["Responsabilidade", "Rotina", "Eficiência", "Conservadorismo"],
+                upright: "O Cavaleiro de Ouros simboliza responsabilidade sólida, dedicação à rotina e eficiência metódica. Representa progresso lento mas seguro em direção a objetivos materiais. Traz confiabilidade, trabalho consistente e abordagem conservadora mas eficaz.",
+                reversed: "Tédio, estagnação, perfeccionismo excessivo. Pode indicar necessidade de flexibilidade ou risco de perder oportunidades por excesso de cautela.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Pents12.jpg"
+            },
+            {
+                name: "Rainha de Ouros",
+                type: "pentacles",
+                keywords: ["Nutrição", "Abundância", "Praticidade", "Conforto"],
+                upright: "A Rainha de Ouros representa nutrição prática, abundância generosa e capacidade de criar conforto. Simboliza mãe terra que cuida de todos com recursos materiais e amor. Traz prosperidade partilhada, sabedoria prática e conexão com natureza e corpo.",
+                reversed: "Materialismo, negligência pessoal, controlo através de dinheiro. Pode indicar necessidade de equilibrar cuidado dos outros com autocuidado.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg"
+            },
+            {
+                name: "Rei de Ouros",
+                type: "pentacles",
+                keywords: ["Sucesso", "Abundância", "Liderança", "Empreendedorismo"],
+                upright: "O Rei de Ouros simboliza sucesso material alcançado, abundância estável e liderança empresarial sábia. Representa mestre dos recursos materiais que constrói império duradouro. Traz prosperidade conquistada através de trabalho inteligente, visão de negócios e generosidade calculada.",
+                reversed: "Ganância, corrupção, workaholic. Pode indicar foco excessivo em dinheiro em detrimento de outros valores ou abuso de poder financeiro.",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg"
+            }
+        ];
+        
+        let currentFilter = 'all';
+        let currentSearchTerm = '';
+        
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            grid.innerHTML = '';
+            
+            const filtered = tarotDeck.filter(card => {
+                const matchesFilter = currentFilter === 'all' || card.type === currentFilter;
+                const matchesSearch = card.name.toLowerCase().includes(currentSearchTerm.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+            
+            filtered.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card-item';
+                cardEl.style.animationDelay = `${index * 0.05}s`;
+                cardEl.innerHTML = `
+                    <div class="card-img-container">
+                        <img src="${card.image}" alt="${card.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22><rect width=%22200%22 height=%22300%22 fill=%22%231a0f2e%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23d4af37%22 font-size=%2216%22 text-anchor=%22middle%22>${card.name}</text></svg>'">
+                    </div>
+                    <div class="card-name">${card.name}</div>
+                `;
+                cardEl.onclick = () => showCardDetails(card);
+                grid.appendChild(cardEl);
+            });
+        }
+        
+        function filterByType(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCards();
+        }
+        
+        function filterCards() {
+            currentSearchTerm = document.getElementById('search-input').value;
+            renderCards();
+        }
+        
+        function showCardDetails(card) {
+            document.getElementById('modal-img').src = card.image;
+            document.getElementById('modal-name').textContent = card.name;
+            document.getElementById('modal-upright').textContent = card.upright;
+            document.getElementById('modal-reversed').textContent = card.reversed;
+            
+            const keywordsContainer = document.getElementById('modal-keywords');
+            keywordsContainer.innerHTML = card.keywords.map(kw => 
+                `<span class="keyword">${kw}</span>`
+            ).join('');
+            
+            document.getElementById('card-modal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('card-modal').classList.remove('active');
+        }
+        
+        function showView(view) {
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            if (view === 'gallery') {
+                document.getElementById('gallery-btn').classList.add('active');
+                document.getElementById('gallery-view').style.display = 'block';
+                document.getElementById('spread-area').style.display = 'none';
+            } else {
+                document.getElementById('spread-btn').classList.add('active');
+                document.getElementById('gallery-view').style.display = 'none';
+                document.getElementById('spread-area').style.display = 'block';
+            }
+        }
+        
+        function drawSpread() {
+            const spreadType = document.getElementById('spread-type').value;
+            const resultContainer = document.getElementById('spread-result');
+            resultContainer.innerHTML = '';
+            
+            let numCards, positions;
+            
+            if (spreadType === 'single') {
+                numCards = 1;
+                positions = ['Carta do Dia'];
+            } else if (spreadType === 'three') {
+                numCards = 3;
+                positions = ['Passado', 'Presente', 'Futuro'];
+            } else {
+                numCards = 10;
+                positions = [
+                    'Situação Atual',
+                    'Desafio',
+                    'Passado',
+                    'Futuro Próximo',
+                    'Acima (Objetivos)',
+                    'Abaixo (Fundação)',
+                    'Conselho',
+                    'Influências Externas',
+                    'Esperanças/Medos',
+                    'Resultado'
+                ];
+            }
+            
+            const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
+            const drawnCards = shuffled.slice(0, numCards);
+            
+            drawnCards.forEach((card, index) => {
+                const isReversed = Math.random() > 0.5;
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'spread-card';
+                cardDiv.style.animationDelay = `${index * 0.3}s`;
+                
+                cardDiv.innerHTML = `
+                    <div class="spread-card-title">${positions[index]}</div>
+                    <img src="${card.image}" class="spread-card-img" alt="${card.name}" 
+                         style="transform: ${isReversed ? 'rotate(180deg)' : 'none'}">
+                    <div class="spread-card-name">${card.name}</div>
+                    ${isReversed ? '<div class="inverted-label">(Invertida)</div>' : ''}
+                    <div class="spread-card-meaning">
+                        ${isReversed ? card.reversed : card.upright}
+                    </div>
+                `;
+                
+                resultContainer.appendChild(cardDiv);
+            });
+        }
+        
+        // Inicializar
+        renderCards();
+        
+        // Fechar modal ao clicar fora
+        document.getElementById('card-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'card-modal') {
+                closeModal();
+            }
+        });
+        
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
